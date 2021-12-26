@@ -1,0 +1,10 @@
+.venv/
+logs/
+.env
+airflow.cfg
+airflow.db
+webserver_config.py
+
+# Appended using Git on VSCode
+dags/__pycache__/dag_daily_load.cpython-38.pyc
+dags/task_definitions/__pycache__/load_tasks.cpython-38.pyc
