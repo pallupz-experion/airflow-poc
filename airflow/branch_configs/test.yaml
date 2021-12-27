@@ -1,0 +1,11 @@
+template:
+  dag_config:
+    schedule: 
+    catch_up: False
+    start_date: 2021-12-25 00:00:00
+
+daily_load_workflow:
+  dag_config:
+    schedule: 
+    catch_up: False
+    start_date: 2021-12-25 00:00:00
