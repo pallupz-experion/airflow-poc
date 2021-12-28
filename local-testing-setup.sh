@@ -17,7 +17,7 @@ pip3 install -r requirements.txt
 echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
 
 # Set AIRFLOW_HOME directory so that DAGs are detected
-export AIRFLOW_HOME=$(pwd)/airflow
+export AIRFLOW_HOME=$(pwd)/airflow_home
 
 # Set AIRFLOW__CORE__LOAD_EXAMPLES to avoid loading examples
 export AIRFLOW__CORE__LOAD_EXAMPLES=False

@@ -1,0 +1,4 @@
+top-level-paths:
+  template_dags_path: airflow_home/dag_templates
+  airflow_dags_path : airflow_home/dags
+  branch_config_path: airflow_home/branch_configs

@@ -2,14 +2,16 @@ import os
 import argparse
 import shutil
 import errno
+import yaml
+from stat import S_IREAD, S_IRGRP, S_IROTH, S_IXUSR, S_IXGRP, S_IXOTH
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--branch', type=str, default='test')
+parser.add_argument('--branch', type=str, default='local')
 args = parser.parse_args()
 BRANCH = args.branch
 
-def setup_dags(branch='test'):
+def create_dags_from_templates(branch):
     """
     This function is used to dynamically generate DAGs - based on templates created under dag_templates folder - 
     for the respective environments. The environment to run for is passed as the argument. 
@@ -19,12 +21,15 @@ def setup_dags(branch='test'):
     Parameters
     ----------
     branch : str
-        The suffix for the environment. Default value: test.
+        The suffix for the environment. Default value: local.
     """
+
+    with open(f'setup/config.yaml', 'r') as data:
+        config = yaml.load(data, Loader=yaml.SafeLoader)
     
-    DAG_TEMPLATES_PATH = 'airflow/dag_templates'
-    DAG_PATH = 'airflow/dags'
-    DAG_CONFIGS_PATH = 'airflow/branch_configs'
+    DAG_TEMPLATES_PATH = config['top-level-paths']['template_dags_path']
+    DAG_PATH = config['top-level-paths']['airflow_dags_path']
+    DAG_CONFIGS_PATH = config['top-level-paths']['branch_config_path']
 
     DAG_files = [filename for filename in os.listdir(DAG_TEMPLATES_PATH) if not filename.startswith('_')]
     config_files = [filename for filename in os.listdir(DAG_CONFIGS_PATH) if not filename.startswith('_')]
@@ -33,7 +38,10 @@ def setup_dags(branch='test'):
     if f'{branch}.yaml' not in config_files: 
         raise FileNotFoundError(errno.ENOENT, "MISSING CONFIG FILE: DAGs cannot be created without relevant configuration files", f'{DAG_CONFIGS_PATH}/{branch}.yaml')
 
-    print(f'Creating DAGs with Suffix: {branch}')
+    print(f'Clearing {DAG_PATH}/{branch} folder')
+    shutil.rmtree(f'{DAG_PATH}/{branch}', ignore_errors=True)
+
+    print(f'Creating new DAGs with suffix: {branch}')
     # Create DAGs from template
     for dag_filename in DAG_files:
         
@@ -41,7 +49,7 @@ def setup_dags(branch='test'):
         dag_file = f'{DAG_TEMPLATES_PATH}/{dag_filename}'
 
         # Generate complete path for output file
-        new_dag_file = f"{DAG_PATH}/{branch}/{dag_filename}"
+        new_dag_file = f"{DAG_PATH}/{branch}/{branch}_{dag_filename}"
         
         # Create output path, if not exists
         os.makedirs(os.path.dirname(new_dag_file), exist_ok=True)
@@ -56,7 +64,9 @@ def setup_dags(branch='test'):
                 for line in fin:
                     fout.write(line.replace('ENVSUFFIX', branch))
 
+        # Make the file read and execute only
+        os.chmod(new_dag_file, S_IREAD | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH)
 
 if __name__ == '__main__':
-    setup_dags(BRANCH)
+    create_dags_from_templates(BRANCH)
     

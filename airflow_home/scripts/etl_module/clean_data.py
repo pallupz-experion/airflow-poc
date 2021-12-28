@@ -1,8 +1,12 @@
-def transform_data():
+from airflow.decorators import task
+
+@task
+def transform(config):
     import logging
     import time
 
     logging.info('transform / enrich data')
+    logging.info(config['paths_config']['path1'])
 
     # pretend logic
     time.sleep(2)
@@ -12,4 +16,4 @@ def transform_data():
 
 
 if __name__== '__main__':
-    transform_data()
+    transform()

@@ -8,5 +8,6 @@ airflow.cfg
 airflow.db
 webserver_config.py
 
-airflow/dags
-airflow/logs
+# airflow_home/branch_configs/local.yaml
+airflow_home/dags
+airflow_home/logs
