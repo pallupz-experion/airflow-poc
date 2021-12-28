@@ -1,20 +1,11 @@
 from datetime import datetime
 from airflow.decorators import dag, task
-import yaml
-import sys
-import logging
-
 from airflow_home.scripts.etl_module import extract_from_api_to_s3, clean_data, load_to_db
+from airflow_home.scripts.utils import utils
 
-DAG_CONFIG_YAML = 'airflow_home/branch_configs/ENVSUFFIX.yaml'
-config = None
-with open(DAG_CONFIG_YAML, 'r') as data:
-    config = yaml.load(data, Loader=yaml.SafeLoader)
-    if 'daily_load_workflow' in config.keys():
-        config = config['daily_load_workflow']
-    else:
-        logging.warn('Dedicated config file for DAG not available. Using template config.')
-        config = config['template']
+
+base_dag_id = 'daily_load_workflow'
+config = utils.get_config('ENVSUFFIX', base_dag_id)
 
 @dag(
     schedule_interval=config['dag_config']['schedule'], 
@@ -30,5 +21,3 @@ def ENVSUFFIX_daily_load_workflow():
     )
 
 ENVSUFFIX_daily_load_workflow = ENVSUFFIX_daily_load_workflow()
-
-
