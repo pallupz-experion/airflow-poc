@@ -11,3 +11,4 @@ webserver_config.py
 # airflow_home/branch_configs/local.yaml
 airflow_home/dags
 airflow_home/logs
+logs/

@@ -7,9 +7,8 @@ from stat import S_IREAD, S_IRGRP, S_IROTH, S_IXUSR, S_IXGRP, S_IXOTH
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--branch', type=str, default='local')
+parser.add_argument('--branch', type=str)
 args = parser.parse_args()
-BRANCH = args.branch
 
 def create_dags_from_templates(branch='local'):
     """
@@ -59,14 +58,26 @@ def create_dags_from_templates(branch='local'):
         print(f'File Created: {new_dag_file}')
 
         # Replace ENVSUFFIX with respective value in the dag definition inside contents
+        skipping_replacement = False
         with open(dag_file, "rt") as fin:
             with open(new_dag_file, "wt") as fout:
                 for line in fin:
-                    fout.write(line.replace('ENVSUFFIX', branch))
+                    # print(skipping_replacement, line)
+                    if line.strip() == "## <replacement-free-zone>":
+                        skipping_replacement = True
+                    elif line.strip() == "## </replacement-free-zone>":
+                        skipping_replacement = False
+                    
+                    out = line.replace('ENVSUFFIX', branch) if skipping_replacement == False else line
+                    fout.write(out)
 
-        # Make the file read and execute only
+        # To prevent accidental edits, make the file read and execute only
         os.chmod(new_dag_file, S_IREAD | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH)
 
+
 if __name__ == '__main__':
-    create_dags_from_templates(BRANCH)
+    if args.branch:
+        create_dags_from_templates(args.branch)
+    else:
+        create_dags_from_templates()
     

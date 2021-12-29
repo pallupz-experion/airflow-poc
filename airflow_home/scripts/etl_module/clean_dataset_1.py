@@ -5,13 +5,13 @@ def transform(config):
     import logging
     import time
 
-    logging.info('transform / enrich data')
+    logging.info('clean dataset 1')
     logging.info(config['paths_config']['path1'])
 
     # pretend logic
     time.sleep(2)
 
-    logging.info('data transformation successful')
+    logging.info('data cleaning on 1 successful')
     return None
 
 
