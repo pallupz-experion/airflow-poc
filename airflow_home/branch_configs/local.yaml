@@ -10,6 +10,7 @@ template:
     catchup           : False
     start_date        : 2021-12-25 00:00:00
     schedule_interval :
+    tags              : []
   common_paths: &common_project_paths
     common_path1  : some/path/to/common-location
 

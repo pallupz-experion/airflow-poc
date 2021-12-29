@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--branch', type=str)
 args = parser.parse_args()
 
-def create_dags_from_templates(branch='local'):
+def create(branch='local'):
     """
     This function is used to dynamically generate DAGs - based on templates created under dag_templates folder - 
     for the respective environments. The environment to run for is passed as the argument. 
@@ -77,7 +77,7 @@ def create_dags_from_templates(branch='local'):
 
 if __name__ == '__main__':
     if args.branch:
-        create_dags_from_templates(args.branch)
+        create(args.branch)
     else:
-        create_dags_from_templates()
+        create()
     
