@@ -19,9 +19,10 @@ dag_id = f'{ENV}_{base_dag_id}'
 
 # Get configs for the dag in the current environment
 config = utils.get_env_configs_for_dag(ENV, base_dag_id)
-tags = config['dag_config'].pop('tags').append(ENV)
+tags = config['dag_config'].pop('tags')
+tags.append(ENV)
 
-with DAG(dag_id, tags=tags, **config['dag_config']) as dag:
+with DAG(dag_id, tags=tags.append(ENV), **config['dag_config']) as dag:
     (
         extract_from_api_to_s3.extract(config) >>
         [cleaner.clean_dataset_1(config), cleaner.clean_dataset_2(config)] >>

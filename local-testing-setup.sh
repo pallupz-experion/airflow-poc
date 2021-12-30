@@ -22,8 +22,19 @@ export PYTHONPATH=$(pwd)
 # Set AIRFLOW__CORE__LOAD_EXAMPLES to avoid loading examples
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
 
-# Initialize airflow db
-airflow db init
+# The Standalone command will initialise the database, make a user, and start all components for you.
+airflow standalone
 
-# Confirm DAGs are being detected
+# # Initialize airflow db
+# airflow db init
+# airflow users create \
+#     --username admin \
+#     --firstname Peter \
+#     --lastname Parker \
+#     --role Admin \
+#     --email spiderman@superhero.org
+# airflow webserver --port 8080
+# airflow scheduler
+
+# # Confirm DAGs are being detected
 airflow dags list

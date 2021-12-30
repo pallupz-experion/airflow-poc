@@ -23,12 +23,12 @@ def create(branch='local'):
         The suffix for the environment. Default value: local.
     """
 
-    with open(f'setup/config.yaml', 'r') as data:
+    with open(f'setup/project_config.yaml', 'r') as data:
         config = yaml.load(data, Loader=yaml.SafeLoader)
     
-    DAG_TEMPLATES_PATH = config['top-level-paths']['template_dags_path']
-    DAG_PATH = config['top-level-paths']['airflow_dags_path']
-    DAG_CONFIGS_PATH = config['top-level-paths']['branch_config_path']
+    DAG_TEMPLATES_PATH = config['common-paths']['template_dags_path'].format(airflow_home=config['common-paths']['airflow_home'])
+    DAG_PATH = config['common-paths']['airflow_dags_path'].format(airflow_home=config['common-paths']['airflow_home'])
+    DAG_CONFIGS_PATH = config['common-paths']['branch_config_path'].format(airflow_home=config['common-paths']['airflow_home'])
 
     DAG_files = [filename for filename in os.listdir(DAG_TEMPLATES_PATH) if not filename.startswith('_')]
     config_files = [filename for filename in os.listdir(DAG_CONFIGS_PATH) if not filename.startswith('_')]
@@ -37,7 +37,7 @@ def create(branch='local'):
     if f'{branch}.yaml' not in config_files: 
         raise FileNotFoundError(errno.ENOENT, "MISSING CONFIG FILE: DAGs cannot be created without relevant configuration files", f'{DAG_CONFIGS_PATH}/{branch}.yaml')
 
-    print(f'Clearing {DAG_PATH}/{branch} folder')
+    print(f"Clearing '{DAG_PATH}/{branch}' folder")
     shutil.rmtree(f'{DAG_PATH}/{branch}', ignore_errors=True)
 
     print(f'Creating new DAGs with suffix: {branch}')

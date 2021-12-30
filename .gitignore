@@ -12,3 +12,5 @@ webserver_config.py
 airflow_home/dags
 airflow_home/logs
 logs/
+airflow_home/airflow-webserver.pid
+airflow_home/standalone_admin_password.txt
