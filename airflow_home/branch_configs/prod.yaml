@@ -19,7 +19,7 @@ daily_load_workflow:
   dag_config:
     <<: *shared_dag_configs
     # To override specific config, specify it separately
-    schedule_interval  : '@daily'
+    schedule_interval  : 
   paths_config:
     << : *common_project_paths
     path1 : some/path/to/specific-location
