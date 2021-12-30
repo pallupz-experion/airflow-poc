@@ -23,9 +23,9 @@ tags = config['dag_config'].pop('tags')
 tags.append(ENV)
 
 with DAG(dag_id, tags=tags.append(ENV), **config['dag_config']) as dag:
-    (
-        extract_from_api_to_s3.extract(config) >>
-        [cleaner.clean_dataset_1(config), cleaner.clean_dataset_2(config)] >>
-        load_to_db.load(config)
-    )
-
+    extract_from_api_to_s3.extract(config) >> \
+    [
+        cleaner.clean_dataset_1(config), 
+        cleaner.clean_dataset_2(config)
+    ] >> \
+    load_to_db.load(config)
